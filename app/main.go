@@ -5,12 +5,14 @@ import (
 	"time"
 
 	"github.com/sultanfariz/synapsis-assignment/app/routes"
+	_categoriesUsecase "github.com/sultanfariz/synapsis-assignment/domain/categories"
 	_productsUsecase "github.com/sultanfariz/synapsis-assignment/domain/products"
 	_usersUsecase "github.com/sultanfariz/synapsis-assignment/domain/users"
 	_categoriesRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/categories"
 	_productsRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/products"
 	_usersRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/users"
 	_authController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/auth"
+	_categoriesController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/categories"
 	_productsController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/products"
 
 	"github.com/labstack/echo/v4"
@@ -45,7 +47,7 @@ func main() {
 
 	// Categories initialize
 	categoriesRepo := _categoriesRepo.NewCategoriesRepository(db)
-	// categoriesUsecase := _categoriesUsecase.NewCategoriesUsecase(categoriesRepo, timeoutContext)
+	categoriesUsecase := _categoriesUsecase.NewCategoriesUsecase(categoriesRepo, timeoutContext)
 
 	// Products initialize
 	productsRepo := _productsRepo.NewProductsRepository(db)
@@ -54,11 +56,13 @@ func main() {
 	// Auth initialize
 	authController := _authController.NewControllers(*usersUsecase)
 	productsController := _productsController.NewControllers(*productsUsecase)
+	categoriesController := _categoriesController.NewControllers(*categoriesUsecase)
 
 	routesInit := routes.ControllersList{
-		JWTMiddleware:      configJWT.Init(),
-		AuthController:     authController,
-		ProductsController: productsController,
+		JWTMiddleware:        configJWT.Init(),
+		AuthController:       authController,
+		ProductsController:   productsController,
+		CategoriesController: categoriesController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
