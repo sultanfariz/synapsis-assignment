@@ -34,7 +34,7 @@ func (pu *ProductsUsecase) GetByCategory(ctx context.Context, name string) ([]*P
 	// get category id from db
 	category, err := pu.CategoriesRepository.GetByName(ctx, name)
 	if err != nil {
-		return nil, err
+		return nil, commons.ErrCategoryNotFound
 	}
 
 	// get all products by category from db
@@ -55,8 +55,14 @@ func (pu *ProductsUsecase) Insert(ctx context.Context, product *Product) (*Produ
 		return nil, err
 	}
 
+	// check if category exists
+	_, err := pu.CategoriesRepository.GetById(ctx, product.CategoryId)
+	if err != nil {
+		return nil, commons.ErrCategoryNotFound
+	}
+
 	// insert product to db
-	product, err := pu.ProductsRepository.Insert(ctx, product)
+	product, err = pu.ProductsRepository.Insert(ctx, product)
 	if err != nil {
 		return nil, err
 	}
