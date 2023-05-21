@@ -3,13 +3,13 @@ package commons
 import (
 	"time"
 
-	"github.com/golang-jwt/jwt"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
 )
 
 type JWTClaims struct {
-	Id int
-	jwt.StandardClaims
+	jwt.Token
 }
 
 type ConfigJWT struct {
@@ -17,33 +17,38 @@ type ConfigJWT struct {
 	ExpiresDuration int
 }
 
-func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
-	return middleware.JWTConfig{
-		Claims:     &JWTClaims{},
+func (jwtConf *ConfigJWT) Init() echojwt.Config {
+	return echojwt.Config{
 		SigningKey: []byte(jwtConf.SecretJWT),
 	}
 }
 
-func (jwtConf *ConfigJWT) GenerateToken(Id int, Email string) (string, error) {
+func (jwtConf *ConfigJWT) GenerateToken(id int, email string) (string, error) {
 	claims := JWTClaims{
-		Id,
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(jwtConf.ExpiresDuration)).Unix(),
-			IssuedAt:  time.Now().Local().Unix(),
-			Issuer:    "auth.service",
-			Subject:   Email,
+		jwt.Token{
+			Claims: jwt.MapClaims{
+				"id":  id,
+				"exp": time.Now().Local().Add(time.Hour * time.Duration(jwtConf.ExpiresDuration)).Unix(),
+				"iat": time.Now().Local().Unix(),
+				"iss": "auth.service",
+				"sub": email,
+			},
 		},
 	}
 
-	// Create token with claims
-	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims.Token.Claims)
 	token, err := t.SignedString([]byte(jwtConf.SecretJWT))
 
 	return token, err
 }
 
-// func GetUser(ctx context.Context) *JWTClaims {
-// 	user := c.Get("user").(*jwt.Token)
-// 	claims := user.Claims.(*JWTMyClaims)
-// 	return claims
-// }
+func GetUserId(c echo.Context) int {
+	token, ok := c.Get("user").(*jwt.Token)
+	if !ok {
+		return 0
+	}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		return int(claims["id"].(float64))
+	}
+	return 0
+}

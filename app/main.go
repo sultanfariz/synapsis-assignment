@@ -5,19 +5,23 @@ import (
 	"time"
 
 	"github.com/sultanfariz/synapsis-assignment/app/routes"
+	_cartsUsecase "github.com/sultanfariz/synapsis-assignment/domain/carts"
 	_categoriesUsecase "github.com/sultanfariz/synapsis-assignment/domain/categories"
 	_productsUsecase "github.com/sultanfariz/synapsis-assignment/domain/products"
 	_usersUsecase "github.com/sultanfariz/synapsis-assignment/domain/users"
+	"github.com/sultanfariz/synapsis-assignment/infrastructure/commons"
+	_cartsRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/carts"
 	_categoriesRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/categories"
 	_productsRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/products"
 	_usersRepo "github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/users"
 	_authController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/auth"
+	_cartsController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/carts"
 	_categoriesController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/categories"
 	_productsController "github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/products"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
-	"github.com/sultanfariz/synapsis-assignment/infrastructure/commons"
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql"
 )
 
@@ -33,6 +37,9 @@ func init() {
 
 func main() {
 	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
 	db := mysql.InitDB()
 	configJWT := commons.ConfigJWT{
 		SecretJWT:       viper.GetString("JWT_SECRET"),
@@ -53,16 +60,22 @@ func main() {
 	productsRepo := _productsRepo.NewProductsRepository(db)
 	productsUsecase := _productsUsecase.NewProductsUsecase(productsRepo, categoriesRepo, timeoutContext)
 
+	// Carts initialize
+	cartsRepo := _cartsRepo.NewCartsRepository(db)
+	cartsUsecase := _cartsUsecase.NewCartsUsecase(cartsRepo, productsRepo, timeoutContext)
+
 	// Auth initialize
 	authController := _authController.NewControllers(*usersUsecase)
 	productsController := _productsController.NewControllers(*productsUsecase)
 	categoriesController := _categoriesController.NewControllers(*categoriesUsecase)
+	cartsController := _cartsController.NewControllers(*cartsUsecase)
 
 	routesInit := routes.ControllersList{
 		JWTMiddleware:        configJWT.Init(),
 		AuthController:       authController,
 		ProductsController:   productsController,
 		CategoriesController: categoriesController,
+		CartsController:      cartsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))

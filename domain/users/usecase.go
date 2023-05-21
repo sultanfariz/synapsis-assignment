@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -80,8 +81,9 @@ func (uu *UsersUsecase) Login(ctx context.Context, user *User) (string, error) {
 		return "", commons.ErrEmptyInput
 	}
 
+	fmt.Printf("user: %+v\n", data)
 	// generate token
-	token, err := uu.jwtConfig.GenerateToken(user.Id, user.Email)
+	token, err := uu.jwtConfig.GenerateToken(data.Id, data.Email)
 	if err != nil {
 		return "", err
 	}

@@ -15,6 +15,10 @@ var (
 	ErrCategoryNotFound = errors.New("category not found")
 	// ErrUserNotFound is thrown when the user is not found
 	ErrUserNotFound = errors.New("user not found")
+	// ErrProductNotFound is thrown when the product is not found
+	ErrProductNotFound = errors.New("product not found")
+	// ErrCartIsEmpty is thrown when the cart is empty
+	ErrCartIsEmpty = errors.New("cart is empty")
 	// ErrEmptyInput is thrown when the input is empty
 	ErrEmptyInput = errors.New("empty input")
 	// ErrValidationFailed is thrown when the input validation is failed

@@ -13,6 +13,7 @@ type ProductsResponse struct {
 	Stock       int    `json:"stock"`
 	Description string `json:"description"`
 	PictureUrl  string `json:"pictureUrl"`
+	CategoryId  int    `json:"categoryId"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -33,6 +34,7 @@ func FromDomain(domain products.Product) ProductsResponse {
 		Stock:       domain.Stock,
 		Description: domain.Description,
 		PictureUrl:  domain.PictureUrl,
+		CategoryId:  domain.CategoryId,
 		CreatedAt:   domain.CreatedAt,
 		UpdatedAt:   domain.UpdatedAt,
 	}

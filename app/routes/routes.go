@@ -2,18 +2,21 @@ package routes
 
 import (
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/auth"
+	"github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/carts"
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/categories"
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/transport/http/products"
 
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 type ControllersList struct {
-	JWTMiddleware        middleware.JWTConfig
+	JWTMiddleware        echojwt.Config
 	AuthController       *auth.Controllers
 	ProductsController   *products.Controllers
 	CategoriesController *categories.Controllers
+	CartsController      *carts.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -34,30 +37,24 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		// product endpoints
 		v1.GET("/products", controllers.ProductsController.GetAll)
 		v1.POST("/products", controllers.ProductsController.Insert)
-		// v1.GET("/products", controllers.ProductsController.GetById)
 
 		// category endpoints
 		v1.GET("/categories", controllers.CategoriesController.GetAll)
 		v1.POST("/categories", controllers.CategoriesController.Insert)
 
-		// // class endpoint
-		// v1.GET("/classes", controllers.ClassController.GetAll)
-		// v1.GET("/classes/:classId", controllers.ClassController.GetById)
-
 		// auth endpoints
 		v1.POST("/login", controllers.AuthController.Login)
 		v1.POST("/register", controllers.AuthController.Register)
+
+		// v1.POST("/carts", controllers.CartsController.Insert)
 	}
 
-	// Member routes
-	// user := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))
-	// {
-	// 	user.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID, middlewares.Member())
-	// 	user.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
-	// 	user.GET("/account/:id", controllers.UsersController.GetByID, middlewares.Member())
-	// 	user.PUT("/account", controllers.UsersController.Update, middlewares.Member())
-	// 	user.PUT("/mybooking/:bookingID", controllers.BookingDetailsController.Update, middlewares.Member())
-	// }
+	// Users routes
+	user := v1.Group("", echojwt.WithConfig(controllers.JWTMiddleware))
+	{
+		user.POST("/carts", controllers.CartsController.Insert)
+		user.GET("/carts", controllers.CartsController.GetByUser)
+	}
 
 	// // admin routes
 	// admin := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))

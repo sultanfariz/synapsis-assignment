@@ -46,6 +46,15 @@ func (r *ProductsRepository) GetById(ctx context.Context, id int) (*model.Produc
 	return &data, nil
 }
 
+func (r *ProductsRepository) GetByIds(ctx context.Context, ids []int) ([]*model.Product, error) {
+	data := []*model.Product{}
+	if err := r.DBConnection.Where("id IN ?", ids).Find(&data).Error; err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
 func (r *ProductsRepository) Insert(ctx context.Context, user *model.Product) (*model.Product, error) {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()

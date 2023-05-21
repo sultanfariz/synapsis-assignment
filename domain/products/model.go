@@ -21,6 +21,7 @@ type ProductsRepositoryInterface interface {
 	GetByCategory(ctx context.Context, categoryId int) ([]*Product, error)
 	GetAll(ctx context.Context) ([]*Product, error)
 	GetById(ctx context.Context, id int) (*Product, error)
+	GetByIds(ctx context.Context, ids []int) ([]*Product, error)
 	Insert(ctx context.Context, category *Product) (*Product, error)
 }
 
