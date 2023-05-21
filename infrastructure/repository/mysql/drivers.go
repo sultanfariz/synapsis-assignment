@@ -5,7 +5,11 @@ import (
 
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/carts"
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/categories"
+	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/checkout_list"
+	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/payments"
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/products"
+	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/transaction_status"
+	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/transactions"
 	"github.com/sultanfariz/synapsis-assignment/infrastructure/repository/mysql/users"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -31,7 +35,11 @@ func InitDB() *gorm.DB {
 		&users.User{},
 		&products.Product{},
 		&categories.Category{},
+		&payments.Payment{},
+		&transaction_status.TransactionStatus{},
 		&carts.Cart{},
+		&checkout_list.CheckoutList{},
+		&transactions.Transaction{},
 	)
 	return DB
 }

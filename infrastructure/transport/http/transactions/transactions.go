@@ -51,8 +51,6 @@ func (controller *Controllers) GetByUser(c echo.Context) error {
 	if err != nil {
 		if errors.Is(err, commons.ErrTransactionNotFound) {
 			return httpControllers.ErrorResponse(c, http.StatusNotFound, commons.ErrTransactionNotFound)
-			// } else if errors.Is(err, commons.ErrTransactionNotFound) {
-			// 	return httpControllers.ErrorResponse(c, http.StatusBadRequest, commons.ErrValidationFailed)
 		}
 		return httpControllers.ErrorResponse(c, http.StatusInternalServerError, commons.ErrInternalServerError)
 	}

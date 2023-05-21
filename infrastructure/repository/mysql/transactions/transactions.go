@@ -2,9 +2,9 @@ package transactions
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	"github.com/sultanfariz/synapsis-assignment/domain/products"
 	model "github.com/sultanfariz/synapsis-assignment/domain/transactions"
 
 	"gorm.io/gorm"
@@ -54,14 +54,17 @@ func (r *TransactionsRepository) Insert(ctx context.Context, trx *model.Transact
 		return nil, err
 	}
 
-	// insert checkout product list
-	for _, checkoutList := range trx.Products {
-		checkoutList.TransactionId = trx.Id
-		fmt.Println("===========================================")
-		fmt.Println(checkoutList)
-		fmt.Println("===========================================")
+	// subtract product stock
+	for _, product := range trx.Products {
+		// find product by id
+		productObj := products.Product{}
+		if err := tx.Where("id = ?", product.ProductId).First(&productObj).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
 
-		if err := tx.Create(&checkoutList).Error; err != nil {
+		// update product stock
+		if err := tx.Model(&productObj).Where("id = ?", product.ProductId).Update("stock", gorm.Expr("stock - ?", product.Quantity)).Error; err != nil {
 			tx.Rollback()
 			return nil, err
 		}

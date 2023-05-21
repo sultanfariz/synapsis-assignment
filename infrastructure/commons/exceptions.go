@@ -11,12 +11,22 @@ var (
 	ErrNotFound = errors.New("not found")
 	// ErrUserAlreadyExists is thrown when the user already exists
 	ErrUserAlreadyExists = errors.New("user already exists")
+	// ErrCategoryAlreadyExists is thrown when the category already exists
+	ErrCategoryAlreadyExists = errors.New("category already exists")
+	// ErrPaymentMethodAlreadyExists is thrown when the payment method already exists
+	ErrPaymentMethodAlreadyExists = errors.New("payment method already exists")
+	// ErrTransactionStatusAlreadyExists is thrown when the transaction status already exists
+	ErrTransactionStatusAlreadyExists = errors.New("transaction status already exists")
 	// ErrCategoryNotFound is thrown when the category is not found
 	ErrCategoryNotFound = errors.New("category not found")
 	// ErrUserNotFound is thrown when the user is not found
 	ErrUserNotFound = errors.New("user not found")
 	// ErrProductNotFound is thrown when the product is not found
 	ErrProductNotFound = errors.New("product not found")
+	// ErrTransactionNotFound is thrown when the transaction is not found
+	ErrTransactionNotFound = errors.New("transaction not found")
+	// ErrProductOutOfStock is thrown when the product is out of stock
+	ErrProductOutOfStock = errors.New("product out of stock")
 	// ErrCartIsEmpty is thrown when the cart is empty
 	ErrCartIsEmpty = errors.New("cart is empty")
 	// ErrEmptyInput is thrown when the input is empty
