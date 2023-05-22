@@ -67,10 +67,12 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		// carts endpoints
 		user.POST("/carts", controllers.CartsController.Insert)
 		user.GET("/carts", controllers.CartsController.GetByUser)
+		user.DELETE("/carts/:id", controllers.CartsController.Delete)
 
 		// transaction endpoints
 		user.POST("/transactions", controllers.TransactionsController.Insert)
 		user.GET("/transactions", controllers.TransactionsController.GetByUser)
+		user.PUT("/transactions/:id", controllers.TransactionsController.UpdateStatus)
 	}
 
 	// // admin routes

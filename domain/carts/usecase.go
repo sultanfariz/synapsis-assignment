@@ -79,3 +79,27 @@ func (cu *CartsUsecase) GetByUser(ctx context.Context, userId int) ([]*products.
 
 	return products, nil
 }
+
+func (cu *CartsUsecase) Delete(ctx context.Context, id int, userId int) error {
+	ctx, cancel := context.WithTimeout(ctx, cu.ContextTimeout)
+	defer cancel()
+
+	// get product cart by id from db
+	cart, err := cu.CartsRepository.GetById(ctx, id)
+	if err != nil {
+		return commons.ErrProductNotFound
+	}
+
+	// validate the user owner
+	if cart.UserId != userId {
+		return commons.ErrUnauthorized
+	}
+
+	// delete product cart by id from db
+	err = cu.CartsRepository.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

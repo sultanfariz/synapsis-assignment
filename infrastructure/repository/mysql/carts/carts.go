@@ -51,3 +51,11 @@ func (r *CartsRepository) Insert(ctx context.Context, userId int, productId int)
 
 	return &cart, nil
 }
+
+func (r *CartsRepository) Delete(ctx context.Context, id int) error {
+	if err := r.DBConnection.Where("id = ?", id).Delete(&model.Cart{}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

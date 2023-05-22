@@ -19,10 +19,12 @@ type CartsRepositoryInterface interface {
 	GetByUser(ctx context.Context, userId int) ([]*Cart, error)
 	GetById(ctx context.Context, id int) (*Cart, error)
 	Insert(ctx context.Context, userId int, productId int) (*Cart, error)
+	Delete(ctx context.Context, id int) error
 }
 
 type CartsUsecaseInterface interface {
 	GetByUser(ctx context.Context, userId int) ([]*products.Product, error)
 	GetById(ctx context.Context, id int) (*Cart, error)
 	Insert(ctx context.Context, userId int, productId int) (*Cart, error)
+	Delete(ctx context.Context, id int, userId int) error
 }
