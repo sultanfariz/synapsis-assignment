@@ -1,0 +1,145 @@
+swagger: '2.0'
+info:
+  title: My API
+  description: API documentation for My Application
+  version: 1.0.0
+host: localhost:8080
+basePath: /api/v1
+schemes:
+  - http
+paths:
+  /categories:
+    get:
+      summary: Get all categories
+      tags:
+        - Categories
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Insert a new category
+      tags:
+        - Testing & Seeding
+      responses:
+        201:
+          description: Created
+  /products:
+    get:
+      summary: Get all products
+      tags:
+        - Products
+      parameters:
+        - in: query
+          name: category
+          type: string
+          description: Category name
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Insert a new product
+      tags:
+        - Testing & Seeding
+      responses:
+        201:
+          description: Created
+  /payments:
+    get:
+      summary: Get all payments
+      tags:
+        - Payments
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Insert a new payment
+      tags:
+        - Testing & Seeding
+      responses:
+        201:
+          description: Created
+  /trx-status:
+    get:
+      summary: Get all transaction statuses
+      tags:
+        - Transaction Status
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Insert a new transaction status
+      tags:
+        - Testing & Seeding
+      responses:
+        201:
+          description: Created
+  /login:
+    post:
+      summary: User login
+      tags:
+        - Authentication
+      responses:
+        200:
+          description: OK
+  /register:
+    post:
+      summary: User registration
+      tags:
+        - Authentication
+      responses:
+        201:
+          description: Created
+  /carts:
+    post:
+      summary: Insert a new cart
+      tags:
+        - Carts
+      responses:
+        201:
+          description: Created
+    get:
+      summary: Get carts by user
+      tags:
+        - Carts
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Delete a cart
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: No Content
+  /transactions:
+    post:
+      summary: Insert a new transaction
+      tags:
+        - Transactions
+      responses:
+        201:
+          description: Created
+    get:
+      summary: Get transactions by user
+      tags:
+        - Transactions
+      responses:
+        200:
+          description: OK
+    put:
+      summary: Update transaction status
+      tags:
+        - Transactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        204:
+          description: No Content
