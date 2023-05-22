@@ -69,10 +69,12 @@ func (controller *Controllers) UpdateStatus(c echo.Context) error {
 		return httpControllers.ErrorResponse(c, http.StatusBadRequest, commons.ErrBadRequest)
 	}
 	userId := commons.GetUserId(c)
-	res, err := controller.TransactionsUsecase.UpdateStatus(ctx, intId, userId, req.StatusId)
+	res, err := controller.TransactionsUsecase.UpdateStatus(ctx, intId, req.StatusId, userId)
 	if err != nil {
 		if errors.Is(err, commons.ErrTransactionNotFound) {
 			return httpControllers.ErrorResponse(c, http.StatusNotFound, commons.ErrTransactionNotFound)
+		} else if errors.Is(err, commons.ErrUnauthorized) {
+			return httpControllers.ErrorResponse(c, http.StatusUnauthorized, commons.ErrUnauthorized)
 		} else if errors.Is(err, commons.ErrValidationFailed) {
 			return httpControllers.ErrorResponse(c, http.StatusBadRequest, commons.ErrValidationFailed)
 		}

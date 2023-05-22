@@ -116,8 +116,19 @@ func (tu *TransactionsUsecase) UpdateStatus(ctx context.Context, id int, statusI
 	ctx, cancel := context.WithTimeout(ctx, tu.ContextTimeout)
 	defer cancel()
 
+	// get trx by id from db
+	trx, err := tu.TransactionsRepository.GetById(ctx, id)
+	if err != nil {
+		return nil, commons.ErrTransactionNotFound
+	}
+
+	// check if trx belongs to user
+	if trx.UserId != userId {
+		return nil, commons.ErrUnauthorized
+	}
+
 	// update trx status
-	trx, err := tu.TransactionsRepository.UpdateStatus(ctx, id, statusId)
+	trx, err = tu.TransactionsRepository.UpdateStatus(ctx, id, statusId)
 	if err != nil {
 		return nil, err
 	}

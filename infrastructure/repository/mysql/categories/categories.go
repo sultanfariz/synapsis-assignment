@@ -49,7 +49,6 @@ func (r *CategoriesRepository) GetById(ctx context.Context, id int) (*model.Cate
 }
 
 func (r *CategoriesRepository) Insert(ctx context.Context, category *model.Category) (*model.Category, error) {
-	category.Category = strings.ToLower(category.Category)
 	category.CreatedAt = time.Now()
 	category.UpdatedAt = time.Now()
 

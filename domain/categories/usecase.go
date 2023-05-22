@@ -2,6 +2,7 @@ package categories
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -32,8 +33,16 @@ func (cu *CategoriesUsecase) Insert(ctx context.Context, category Category) (*Ca
 		return nil, commons.ErrEmptyInput
 	}
 
+	category.Category = strings.ToLower(category.Category)
+
+	// check if category is already exist
+	categoryRes, err := cu.CategoriesRepository.GetByName(ctx, category.Category)
+	if err == nil && categoryRes != nil {
+		return nil, commons.ErrCategoryAlreadyExists
+	}
+
 	// insert category to db
-	categoryRes, err := cu.CategoriesRepository.Insert(ctx, &category)
+	categoryRes, err = cu.CategoriesRepository.Insert(ctx, &category)
 	if err != nil {
 		return nil, err
 	}

@@ -5,6 +5,8 @@ import "errors"
 var (
 	// ErrInvalidCredentials is thrown when the user credentials are invalid
 	ErrInvalidCredentials = errors.New("invalid credentials")
+	// ErrUnauthorized is thrown when the user is unauthorized
+	ErrUnauthorized = errors.New("unauthorized")
 	// ErrInternalServerError is thrown when the server encounters an error
 	ErrInternalServerError = errors.New("internal server error")
 	// ErrNotFound is thrown when the object is not found

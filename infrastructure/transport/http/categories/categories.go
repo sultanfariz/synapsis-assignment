@@ -29,8 +29,8 @@ func (controller *Controllers) Insert(c echo.Context) error {
 	domain := req.ToDomain()
 	res, err := controller.CategoriesUsecase.Insert(ctx, domain)
 	if err != nil {
-		if errors.Is(err, commons.ErrUserAlreadyExists) {
-			return httpControllers.ErrorResponse(c, http.StatusConflict, commons.ErrUserAlreadyExists)
+		if errors.Is(err, commons.ErrCategoryAlreadyExists) {
+			return httpControllers.ErrorResponse(c, http.StatusConflict, commons.ErrCategoryAlreadyExists)
 		} else if errors.Is(err, commons.ErrValidationFailed) {
 			return httpControllers.ErrorResponse(c, http.StatusConflict, commons.ErrValidationFailed)
 		}
